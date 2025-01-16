@@ -80,7 +80,8 @@ export const login = async (req, res) => {
         }
 
         return res.status(200).cookie("token", token, {
-            maxAge: 1*24*60*60*1000, httpsOnly:true, sameSite:'strict'}).json({
+            maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict'
+        }).json({
             message: `Welcome back ${user.fullname}`,
             success: true
         })
@@ -89,51 +90,61 @@ export const login = async (req, res) => {
         console.log(error);
     }
 }
-export const logout = async (req,res) => {
+export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "", {maxAge:0}).json({
-            message:"Logged out successfully.",
-            success:true
+        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+            message: "Logged out successfully.",
+            success: true
         })
     }
 
-    catch(error)
-    {
+    catch (error) {
         console.log(error);
     }
 }
-export const updateProfile = async (req,res) => {
+export const updateProfile = async (req, res) => {
     try {
-        const {fullname, email, phoneNumber, bio, skills} = req.body;
+        const { fullname, email, phoneNumber, bio, skills } = req.body;
+        const file = req.file;
         
-        if (!fullname || !email || !phoneNumber || !bio || !skills) {
+        // cloudinary should be here
+
+
+        const skillsArray = skills.split(",");
+        const userId = req.id; //middleware Authentication
+        let user = await User.findById(userId);
+
+        if (!user) {
             return res.status(400).json({
-                message: "Something is missing",
+                message: "User not found.",
                 success: false
-            });
-        };
-    const skillsArray = skills.split(",");
-    const userId = req.id; //middleware Authentication
-    let user = await User.findById(userId);
-    
-    if(!user){
-        return res.status(400).json({
-            message:"User not found.",
-            success:false
+            })
+        }
+        // updating data
+        if(fullname) user.fullname = fullname
+        if(phoneNumber) user.phoneNumber = phoneNumber
+        if(bio) user.profile.bio = bio
+        if(skills) user.profile.skills = skillsArray
+
+        //resume comes later here...
+
+        await user.save();
+        
+        user = {
+            _id: user._id,
+            fullname: user.fullname,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            role: user.role,
+            profile: user.profile
+        }
+        return res.status(200).json({
+            message:"Profile updated successfully.",
+            user,
+            success:true
+
         })
-    }
-// updating data
-    user.fullname = fullname,
-    user.email = email,
-    user.phoneNumber = phoneNumber,
-    user.profile.bio = bio,
-    user.profile.skills = skillsArray
-
-    //resume comes later here...
-
-    await user.save();
-
-    }catch (error) {
+    } catch (error) {
         console.log(error);
     }
 }
