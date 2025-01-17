@@ -68,6 +68,7 @@ export const login = async (req, res) => {
         const tokenData = {
             userId: user._id
         }
+        console.log(tokenData)
         const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         user = {
@@ -108,20 +109,22 @@ export const updateProfile = async (req, res) => {
         const file = req.file;
         
         // cloudinary should be here
-
-
-        const skillsArray = skills.split(",");
+        
+        let skillsArray;
+        if(skills){
+           skillsArray = skills.split(",");
+        }
         const userId = req.id; //middleware Authentication
         let user = await User.findById(userId);
-
         if (!user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: "User not found.",
                 success: false
             })
         }
         // updating data
         if(fullname) user.fullname = fullname
+        if(email) user.email = email
         if(phoneNumber) user.phoneNumber = phoneNumber
         if(bio) user.profile.bio = bio
         if(skills) user.profile.skills = skillsArray
