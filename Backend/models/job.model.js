@@ -8,7 +8,7 @@ const jobSchema = new mongoose.Schema({
     requirements:[{
         type:String
     }],
-    Salary:{
+    salary:{
         type:Number,
         required:true
     },
