@@ -29,6 +29,7 @@ export const register = async (req, res) => {
         })
         return res.status(201).json({
             message: "Account created successfully.",
+            success: true
         })
     } catch (error) {
         console.log(error);
@@ -84,6 +85,7 @@ export const login = async (req, res) => {
             maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict'
         }).json({
             message: `Welcome back ${user.fullname}`,
+            user,
             success: true
         })
 
