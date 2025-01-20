@@ -10,6 +10,7 @@ import {
     AvatarFallback,
     AvatarImage,
   } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import React from 'react'
 
 const Navbar = () => {
@@ -33,10 +34,23 @@ const Navbar = () => {
                             </Avatar>
                         </PopoverTrigger>
                         <PopoverContent className="w-80">
+                        <div className="flex gap-4 space-y-2">
                             <Avatar className="cursor-pointer">
                                 <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                             </Avatar>
-                            <h4 className='font-medium'>Suman Singha</h4>
+                            <div>
+                              <h4 className='font-medium'>Suman Singha</h4> 
+                               <p className='text-sm text-muted-foreground'>
+                                Lorem ipsum dolor sit amet.
+                               </p>
+                            </div>
+                            </div>
+                            <div className="flex flex-col gap-3 text-gray">
+                                <Button variant="link">View Profile</Button>
+                                <Button variant="link">Logout</Button>
+
+
+                             </div>
                         </PopoverContent>
                     </Popover>
                 </div>
