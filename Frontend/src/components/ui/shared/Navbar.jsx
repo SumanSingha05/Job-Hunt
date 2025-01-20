@@ -1,5 +1,15 @@
-import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
-import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
+// import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
+// import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover"
+  import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+  } from "@/components/ui/avatar"
 import React from 'react'
 
 const Navbar = () => {
