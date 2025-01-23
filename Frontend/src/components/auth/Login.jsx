@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
+import { RadioGroup,  } from '../ui/radio-group'
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
@@ -16,9 +17,24 @@ const Login = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
 
   }
-    const submitHandler = async (e) =>{
-      setInput({...input, [e.target.name]:e.target.value})
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        navigate("/");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error)
     }
+  }
 
 
   return (
@@ -44,12 +60,12 @@ const Login = () => {
             <Input
               type="password"
               value={input.password}
-              nam="password"
+              name="password"
               onChange={changeEventHandler}
               placeholder="sumansingha@gmail.com"
             />
           </div>
-          <div className='flex items-center justify between'>
+          <div className='flex items-center justify-between'>
             <RadioGroup className='flex items-center gap-4 my-5'>
               <div className="flex items-center space-x-2">
                 <Input
