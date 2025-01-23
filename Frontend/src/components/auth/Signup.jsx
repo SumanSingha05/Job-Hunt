@@ -5,14 +5,16 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { RadioGroup, } from '../ui/radio-group'
-import { Toaster } from '../ui/sonner'
+import { RadioGroup } from '../ui/radio-group'
 import { toast } from 'sonner'
+import axios from 'axios'
+import { USER_API_END_POINT } from '@/utils/constant'
 const Signup = () => {
 
+  
   const [input, setInput] = useState({
     fullname: "",
-    email: "",
+    email: "",        
     phoneNumber: "",
     password: "",
     role: "",
@@ -44,7 +46,7 @@ const Signup = () => {
         headers: {
           "Content-Type": "multipart/form-data"
         },
-        withCredentials: true,
+        // withCredentials: true,
       });
       if (res.data.success) {
         navigate("/login");
@@ -85,11 +87,11 @@ const Signup = () => {
           <div className='my-2'>
             <Label>Phone Number</Label>
             <Input
-              type="Phone Number "
+              type="tel"
               value={input.phoneNumber}
-              name="PhoneNumber"
+              name="phoneNumber"
               onChange={changeEventHandler}
-              placeholder="0000"
+              placeholder="1234567890"
             />
           </div>
           <div className='my-2'>

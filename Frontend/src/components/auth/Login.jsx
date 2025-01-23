@@ -6,6 +6,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
 import { RadioGroup,  } from '../ui/radio-group'
+import { toast } from 'sonner'
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
@@ -32,7 +33,9 @@ const Login = () => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      toast.error(error.response.data.message);
+
     }
   }
 

@@ -1,11 +1,15 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { request } from "express";
 import jwt from "jsonwebtoken"
 //business logic
 export const register = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
-        if (!fullname || !email || !phoneNumber || !password || !role) {
+        console.log(req.body)
+        if 
+        (!fullname || !email || !phoneNumber || !password || !role) {
+            console.log("hi")
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
