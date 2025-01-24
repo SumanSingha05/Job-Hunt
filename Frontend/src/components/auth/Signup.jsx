@@ -46,7 +46,7 @@ const Signup = () => {
         headers: {
           "Content-Type": "multipart/form-data"
         },
-        // withCredentials: true,
+         withCredentials: true,
       });
       if (res.data.success) {
         navigate("/login");
@@ -54,6 +54,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.log(error)
+      toast.error(error.response.data.message);
     }
   }
 
