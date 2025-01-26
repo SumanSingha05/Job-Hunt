@@ -1,8 +1,14 @@
 import React from 'react'
 import Navbar from './shared/Navbar'
+import HeroSection from './HeroSection'
 const Home = () => {
   return (
-    <div><Navbar/></div>
+    <div><Navbar/>
+    <HeroSection/>
+    {/* <CategoryCarousel/>
+    <LatestJobs/>
+    <Footer/> */}
+    </div>
   )
 }
 
