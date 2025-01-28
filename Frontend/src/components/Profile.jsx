@@ -4,10 +4,12 @@ import { Avatar, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import { Contact, Mail, Pen } from 'lucide-react'
 import { Badge } from './ui/badge'
+import { Label } from './ui/label'
 
 
 const skills =["html","css","javascript","reactjs"];
 const Profile = () => {
+  const isResume = true;
   return (
     <div>
       <Navbar />
@@ -47,6 +49,16 @@ const Profile = () => {
             skills.length != 0 ? skills.map((item, index) => <Badge key={index}>{item}</Badge>) : <span>NA</span>
           }
         </div>
+      </div>
+      <div className='grid w-full max-w-sm items-center gap-1.5'>
+      <Label className="text-md font-bold">Resume</Label>
+            {
+              isResume ? <a target='blank'href='https://youtube.com' className='text-blue-500 w-full hover:underline cursor-pointer'>Suman Singha</a> : <span>NA</span>
+            }
+      </div>
+      <div className='max-w-4xl mx-auto bg-white rounded-2xl'>
+      <h1>Applied Jobs</h1>
+      {/* application table will be displayed */}
       </div>
     </div>
     </div>
