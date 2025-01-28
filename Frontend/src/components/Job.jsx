@@ -19,8 +19,8 @@ const Job = () => {
           </Avatar>
         </Button>
         <div>
-          <h1>Company Name</h1>
-          <p>India</p>
+          <h1 className='font-medium text-lg'>Company Name</h1>
+          <p className='text-sm text-gray-500'>India</p>
         </div>
       </div>
       <div>
