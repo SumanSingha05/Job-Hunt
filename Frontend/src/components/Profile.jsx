@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from './shared/Navbar'
 import { Avatar, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
@@ -6,15 +6,18 @@ import { Contact, Mail, Pen } from 'lucide-react'
 import { Badge } from './ui/badge'
 import { Label } from './ui/label'
 import AppliedJobTable from './AppliedJobTable'
-
+import UpdateProfileDialog from './updateProfileDialog'
 
 const skills =["html","css","javascript","reactjs"];
+const isResume = true;
+
 const Profile = () => {
-  const isResume = true;
+  const [open, setOpen] = useState(false);
+
   return (
     <div>
       <Navbar />
-      <div className='mex-w-4xl mx-auto bg-white border border-gray-200 rounded-2xl my-5 p-8'>
+      <div className='max-w-4xl mx-auto bg-white border border-gray-200 rounded-2xl my-5 p-8'>
         <div className='flex justify-between'>
           <div className='flex items-center gap-4'>
             <Avatar className="h-24 w-24">
@@ -25,7 +28,7 @@ const Profile = () => {
               <h1 className='font-medium text-xl'>Full Name</h1>
               <p>Add your bio here here your bio must be here due to the code </p>
             </div>
-          </div><Button className='text-right' variant='outline'>
+          </div><Button onClick={() => setOpen(true)} className='text-right' variant='outline'>
             <Pen />
           </Button>
         </div>
@@ -64,6 +67,7 @@ const Profile = () => {
        <AppliedJobTable/>
             
       </div>
+            <UpdateProfileDialog open ={open} setOpen={setOpen}/>
     </div>
   )
 }
