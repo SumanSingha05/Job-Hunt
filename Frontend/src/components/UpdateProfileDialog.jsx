@@ -5,11 +5,35 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import store from '@/redux/store'
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false);
-    
-    
+    const{user} = useSelector(store=>store.auth);
+
+    const[input, setInput] = useState({
+    fullname: user?.fullname,
+    email:user?.email,
+    phoneNumber:user?.phoneNumber,
+    bio:user?.profile?.skills.map(skills=>skills),
+    skills:user?.profile?.resume
+});
+
+    const changeEventHandler =(e) => {
+        setInput({...input,[e.target.name]:e.target.value});
+    }
+
+
+    const fileChangeHandler = (e) => {
+
+    }
+
+    const submitHandler = (e) =>{
+        e.preventDefault();
+        console.log(input);
+    }
+
     return (
         <div>
             <Dialog open={open}>
@@ -17,13 +41,16 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                     <DialogHeader>
                         <DialogTitle>Update Profile</DialogTitle>
                     </DialogHeader>
-                    <form>
+                    <form onSubmit={submitHandler}>
                         <div className='grid gap-4 py-4'>
                             <div className='grid grid-cols-4 items-center gap-4'>
                                 <Label htmlFor='name' className='text-right'>Name</Label>
                                 <Input
                                     id="name"
                                     name="name"
+                                    value={input.fullname}
+                                    type="text"
+                                    onChange={changeEventHandler}
                                     className="col-span-3"
                                 />
                             </div>
@@ -32,6 +59,9 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 <Input
                                     id="email"
                                     name="email"
+                                    type="email"
+                                    value={input.email}
+                                    onChange={changeEventHandler}
                                     className="col-span-3"
                                 />
                             </div>
@@ -40,6 +70,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 <Input
                                     id="number"
                                     name="number"
+                                    value={input.phoneNumber}
+                                    onChange={changeEventHandler}
                                     className="col-span-3"
                                 />
                             </div>
@@ -48,6 +80,9 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 <Input
                                     id="bio"
                                     name="bio"
+                                    value={input.bio}
+                                    onChange={changeEventHandler}
+
                                     className="col-span-3"
                                 />
                             </div>
@@ -56,6 +91,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 <Input
                                     id="skills"
                                     name="skills"
+                                    value={input.skills}
+                                    onChange={changeEventHandler}
                                     className="col-span-3"
                                 />
                             </div><div className='grid grid-cols-4 items-center gap-4'>
