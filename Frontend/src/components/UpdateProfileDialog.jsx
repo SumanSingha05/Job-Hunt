@@ -1,13 +1,19 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
+import { Button } from './ui/button'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
+    const [loading, setLoading] = useState(false);
+    
+    
     return (
         <div>
             <Dialog open={open}>
-                <DialogContent>
+                <DialogContent className="sm:max-w-[423px]" onInteractOutside={() => setOpen(false)}>
                     <DialogHeader>
                         <DialogTitle>Update Profile</DialogTitle>
                     </DialogHeader>
@@ -22,40 +28,54 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor='name' className='text-right'>Name</Label>
+                                <Label htmlFor='email' className='text-right'>Email</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="email"
+                                    name="email"
                                     className="col-span-3"
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor='name' className='text-right'>Name</Label>
+                                <Label htmlFor='number' className='text-right'>Number</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="number"
+                                    name="number"
                                     className="col-span-3"
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor='name' className='text-right'>Name</Label>
+                                <Label htmlFor='bio' className='text-right'>Bio</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="bio"
+                                    name="bio"
                                     className="col-span-3"
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor='name' className='text-right'>Name</Label>
+                                <Label htmlFor='skills' className='text-right'>Skills</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="skills"
+                                    name="skills"
+                                    className="col-span-3"
+                                />
+                            </div><div className='grid grid-cols-4 items-center gap-4'>
+                                <Label htmlFor='file' className='text-right'>File</Label>
+                                <Input
+                                    id="file"
+                                    name="file"
+                                    type="file"
+                                    accept="application/pdf"
                                     className="col-span-3"
                                 />
                             </div>
-                            
-
                         </div>
+                        <DialogFooter>
+                            {
+                                loading ? <Button className="w-full my-4">  <Loader2 className='mr-2 h-4 w-4 animate-spin'/> Please Wait
+                                </Button> : <Button type="submit" className="w-full my-4">Update</Button>
+           
+                            }
+                        </DialogFooter>
                     </form>
                 </DialogContent>
             </Dialog>
