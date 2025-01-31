@@ -46,6 +46,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         }
         try {
             setLoading(true);
+            setLoading(true);
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -136,6 +137,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     name="file"
                                     type="file"
                                     accept="application/pdf"
+                                    
                                     onChange={fileChangeHandler}
                                     className="col-span-3"
                                 />
