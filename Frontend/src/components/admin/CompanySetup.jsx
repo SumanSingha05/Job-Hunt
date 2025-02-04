@@ -4,7 +4,9 @@ import { Button } from '../ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
-
+import { COMPANY_API_END_POINT } from '@/utils/constant'
+import axios from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const CompanySetup = () => {
     const [input, setInput] = useState({
@@ -14,7 +16,10 @@ const CompanySetup = () => {
         location: "",
         file: null
     });
-     const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const params = useParams();
+    const navigate = useNavigate();
+
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value })
     }
@@ -34,7 +39,16 @@ const CompanySetup = () => {
             formData.append("file".input.file);
         }        
         try{
-            const res = await.put(`${}`)
+            const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData, {
+                header: {
+                    'Content-Type':'application/json'
+            },
+            withCredentials:true
+        });
+        if(res.data.success){
+            toast.success(res.data.message);
+            
+        }
         }catch(error){
             console.log(error);
         }
