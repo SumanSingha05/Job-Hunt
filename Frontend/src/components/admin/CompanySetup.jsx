@@ -9,9 +9,10 @@ import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useSelector } from 'react-redux'
-import store from '@/redux/store'
+
 
 const CompanySetup = () => {
+    const params = useParams();
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -21,7 +22,6 @@ const CompanySetup = () => {
     }); 
     const {singleCompany} = useSelector(store=>store.company)
     const [loading, setLoading] = useState(false);
-    const params = useParams();
     const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
@@ -71,7 +71,7 @@ const CompanySetup = () => {
         file: singleCompany.file || null
         })
     },[singleCompany]);
-    return (
+    return ( 
         <div>
             <Navbar />
             <div className='max-w-xl mx-auto my-10'>
