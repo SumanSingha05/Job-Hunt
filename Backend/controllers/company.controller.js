@@ -61,7 +61,7 @@ export const getCompanyById = async (req, res) => {
         const company = await Company.findById(companyId);
         if (!company) {
             return res.status(404).json({
-                message: "Companies not found.",
+                message: "Company not found.",
                 success: false
             })
         }
@@ -85,7 +85,7 @@ export const updateCompany = async (req, res) => {
         const logo = cloudResponse.secure_url;
         
 
-        const updateData = { name, description, website, location, logo }
+        const updateData = { name, description, website, location, logo };
 
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if(!company){
