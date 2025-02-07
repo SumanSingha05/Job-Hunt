@@ -33,9 +33,9 @@ const CompaniesTable = () => {
                                         <AvatarImage src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg" />
                                     </Avatar>
                                 </TableCell>
-                                <TableCell>Company Name</TableCell>
-                                <TableCell>04-02-2025</TableCell>
-                                <TableCell>Company Name</TableCell>
+                                <TableCell>{company.name}</TableCell>
+                                <TableCell>{company.createdAt.split("T")[0]}</TableCell>
+                                
                                 <TableCell className='text-right cursor-pointer'>
                                     <Popover>
                                         <PopoverTrigger><MoreHorizontal /></PopoverTrigger>
@@ -47,12 +47,12 @@ const CompaniesTable = () => {
                                         </PopoverContent>
                                     </Popover>
                                 </TableCell>
-                                </>
-                                        )
-                                    }
+                                </div>
+                              )
+                          })
                             }
 
-                            </>
+                     </>
                         )
                     }
 
