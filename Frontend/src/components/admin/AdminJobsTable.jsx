@@ -10,6 +10,7 @@ const AdminJobsTable = () => {
     const { companies, searchCompanyByText } = useSelector(store => store.company);
     const [filterCompany, setFilterCompany] = useState(companies);
     const navigate = useNavigate();
+                
     useEffect(() => {
         const filteredCompany = companies.length >= 0 && companies.filter((company) => {
             if(!searchCompanyByText){
@@ -23,11 +24,11 @@ const AdminJobsTable = () => {
     return (
         <div>
             <Table>
-                <TableCaption>A List of your recent register companies</TableCaption>
+                <TableCaption>A List of your recent posted jobs</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Logo</TableHead>
-                        <TableHead>Name</TableHead>
+                        <TableHead>Company Name</TableHead>
+                        <TableHead>Role</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead className="text-right">Action</TableHead>
                     </TableRow>
@@ -36,11 +37,7 @@ const AdminJobsTable = () => {
                     {
                         filterCompany?.map((company) => (
                                <tr>
-                                    <TableCell>
-                                    <Avatar>
-                                        <AvatarImage src={company.logo} />
-                                    </Avatar>
-                                </TableCell>
+                                   
                                 <TableCell>{company.name}</TableCell>
                                 <TableCell>{company.createdAt.split("T")[0]}</TableCell>
                                 

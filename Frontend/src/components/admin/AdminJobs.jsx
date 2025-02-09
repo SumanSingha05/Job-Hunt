@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import CompaniesTable from './CompaniesTable'
 import { useNavigate } from 'react-router-dom'
-import useGetAllCompanies from '@/hooks/useGetAllCompanies'
 import { useDispatch } from 'react-redux'
 import {setSearchCompanyByText} from '@/redux/companySlice'
 import AdminJobsTable from './AdminJobsTable'
+import useGetAllAdminJobs from '@/hooks/useGetAllAdminJobs'
 
 const AdminJobs = () => {
-    
+    useGetAllAdminJobs();
     const [input, setInput] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
