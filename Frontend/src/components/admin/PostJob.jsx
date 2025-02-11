@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+
+
+const companyArray = [];
 
 const PostJob = () => {
   const [input, setInput] = useState({
@@ -23,6 +27,7 @@ const PostJob = () => {
     <div>
         <Navbar/>
         <div className='flex items-center justify-center w-screen my-5'>
+            <form action="" className='p-8 max-w 4xl border border-gray-200 shadow-lg rounded-md'>
             <div className='grid grid-cols-2 gap-2'>
             <div>
                 <Label>Title</Label>
@@ -105,6 +110,11 @@ const PostJob = () => {
                 />
             </div>
             </div>
+            <Button className='w-full mt-4'>Post New Job</Button>
+            {
+              companyArray.length == 0 && <p>Please register a company first</p>
+            }
+            </form>
         </div>
     </div>
   )
