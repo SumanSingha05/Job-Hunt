@@ -28,7 +28,7 @@ const ApplicantsTable = () => {
                                 <TableCell>{item?.applicant?.fullname}</TableCell>
                                 <TableCell>{item?.applicant?.email}</TableCell>
                                 <TableCell>{item?.applicant?.phoneNumber}</TableCell>
-                                <TableCell><a href={item?.applicant?.profile?.resume} target='_blank' rel="noopener noreferrer">{item?.applicant?.profile?.resumeOriginalName}</a></TableCell>
+                                <TableCell className="text-blue-600 cursor-pointer"><a href={item?.applicant?.profile?.resume} target='_blank' rel="noopener noreferrer">{item?.applicant?.profile?.resumeOriginalName}</a></TableCell>
                                 <TableCell>Date</TableCell>
                                 <TableCell className='float-right cursor-pointer'>
                                     <Popover>
