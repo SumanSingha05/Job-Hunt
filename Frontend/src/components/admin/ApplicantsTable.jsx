@@ -29,7 +29,7 @@ const ApplicantsTable = () => {
                                 <TableCell>{item?.applicant?.email}</TableCell>
                                 <TableCell>{item?.applicant?.phoneNumber}</TableCell>
                                 <TableCell className="text-blue-600 cursor-pointer"><a href={item?.applicant?.profile?.resume} target='_blank' rel="noopener noreferrer">{item?.applicant?.profile?.resumeOriginalName}</a></TableCell>
-                                <TableCell>Date</TableCell>
+                                <TableCell>{item?.applicant.createdAt.split("T")[0]}</TableCell>
                                 <TableCell className='float-right cursor-pointer'>
                                     <Popover>
                                         <PopoverTrigger>
