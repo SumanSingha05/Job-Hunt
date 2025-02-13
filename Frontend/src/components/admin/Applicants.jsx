@@ -10,6 +10,7 @@ const Applicants = () => {
     const params = useParams();
     const dispatch = useDispatch();
     const {applicants} = useSelector(store=>store.application);
+    
     useEffect (() => {
         const fetchAllApplicants = async () => {
              try {
