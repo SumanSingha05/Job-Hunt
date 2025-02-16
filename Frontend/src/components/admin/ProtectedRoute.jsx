@@ -1,7 +1,7 @@
 const { useEffect } = require("react");
 const { useSelector } = require("react-redux");
 const { useNavigate } = require("react-router-dom");
-
+import { useEffect } from "react";
 
 
 const ProtectedRoute = ({children}) => {
