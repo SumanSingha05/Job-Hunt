@@ -18,7 +18,7 @@ const Login = () => {
     password: "",
     role: "",
   });
-  const {loading} = useSelector(store=>store.auth);
+  const {loading, user} = useSelector(store=>store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -49,7 +49,11 @@ const Login = () => {
     }
   }
 
-
+  useEffect(() => {
+    if(user){
+      navigate("/");
+    }
+  })
   return (
     <div>
       <Navbar />
