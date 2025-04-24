@@ -71,11 +71,13 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     return (
         <div>
-            <Dialog open={open}>
-                <DialogContent className="sm:max-w-[425px]" onInteractOutside={() => setOpen(false)}>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>Update Profile</DialogTitle>
                     </DialogHeader>
+
+
                     <form onSubmit={submitHandler}>
                         <div className='grid gap-4 py-4'>
                             <div className='grid grid-cols-4 items-center gap-4'>
@@ -137,7 +139,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     name="file"
                                     type="file"
                                     accept="application/pdf"
-                                    
+
                                     onChange={fileChangeHandler}
                                     className="col-span-3"
                                 />
