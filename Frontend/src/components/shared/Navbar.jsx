@@ -59,6 +59,28 @@ const Navbar = () => {
                                     <li><Link to="/Jobs">Jobs</Link></li>
                                     <li><Link to="/Browse">Browse</Link></li>
                                     <li><Link to="/resume-templates">Resume Templates</Link></li>
+                                    <li>
+                                        <Link
+                                            to="/interview-prep"
+                                            style={{
+                                                textDecoration: 'none',
+                                                color: '#3d5afe', // A moderate indigo text color
+                                                background: 'linear-gradient(90deg, #e8eaf6, #c5cae9)', // Very light cyan to light indigo gradient
+                                                padding: '8px 15px',
+                                                borderRadius: '5px',
+                                                boxShadow: '0 2px 4px rgba(63, 81, 181, 0.08)', // Subtle indigo shadow for depth
+                                                transition: 'box-shadow 0.3s ease-in-out',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.boxShadow = '0 3px 6px rgba(63, 81, 181, 0.15)'; // Slightly more noticeable indigo shadow on hover
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.boxShadow = '0 2px 4px rgba(63, 81, 181, 0.08)'; // Revert to the initial subtle indigo shadow
+                                            }}
+                                        >
+                                            Interview Preparation With AI
+                                        </Link>
+                                    </li>
                                 </>
                             )
                         }
