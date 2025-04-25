@@ -68,7 +68,7 @@ const Navbar = () => {
                         !user ? (
                             <div className="flex items-center gap-2">
                                 <Link to="/login"><Button variant="outline">Login</Button></Link>
-                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[#320186]">Signup</Button></Link>
+                                <Link to="/signup"><Button className="bg-indigo-600 hover:bg-[#320186]">Signup</Button></Link>
 
                             </div>
                         ) : (
