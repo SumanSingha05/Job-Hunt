@@ -15,6 +15,7 @@ import PostJob from './components/admin/PostJob'
 import Applicants from './components/admin/Applicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
 import ResumeTemplates from './components/ResumeTemplates'
+import InterviewPrep from './components/interviewPrep'
 const appRouter = createBrowserRouter([
   {
     path: '/',
@@ -48,6 +49,11 @@ const appRouter = createBrowserRouter([
     path: '/resume-templates',
     element: <ResumeTemplates />
   },
+  {
+    path: '/interview-prep',
+    element: <InterviewPrep />
+  },
+
   //for admin 
 
   {
