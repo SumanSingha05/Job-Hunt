@@ -58,6 +58,7 @@ const Navbar = () => {
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="/Jobs">Jobs</Link></li>
                                     <li><Link to="/Browse">Browse</Link></li>
+                                    <li><Link to="/resume-templates">Resume Templates</Link></li>
                                 </>
                             )
                         }
