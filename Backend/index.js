@@ -8,6 +8,8 @@ import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 import path from "path";
+import interviewRoutes from './routes/interviewRoute.js';
+
 
 dotenv.config({});
 const app = express();
@@ -33,6 +35,8 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
+app.use('/api/v1/interview', interviewRoutes);
+
 
 app.use(express.static(path.join(_dirname, "/frontend/dist")))
 app.get('*', (req, res) => {
