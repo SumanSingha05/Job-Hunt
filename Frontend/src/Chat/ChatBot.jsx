@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Send } from "lucide-react";
-import botLogo from "../assets/bot.png"; // Assuming these paths are correct
+import botLogo from "../assets/bot.png";
 import userLogo from "../assets/userr.png";
 
 const ChatBot = () => {
@@ -15,7 +15,6 @@ const ChatBot = () => {
     ]);
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
-    const [streamedReply, setStreamedReply] = useState("");
     const chatEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -30,16 +29,17 @@ const ChatBot = () => {
         if (!input.trim()) return;
 
         const newUserMessage = { role: "user", content: input };
-        setMessages((prev) => [...prev, newUserMessage]);
+        const newAssistantMessage = { role: "assistant", content: "" };
+
+        setMessages((prev) => [...prev, newUserMessage, newAssistantMessage]);
         setInput("");
         setIsTyping(true);
-        setStreamedReply("");
 
         try {
             const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer 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`,
+                    "Authorization": `Bearer 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`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
@@ -48,7 +48,7 @@ const ChatBot = () => {
                         {
                             role: "system",
                             content:
-                                "You are a helpful and professional career advisor. Provide specific skill suggestions, trending job roles, and mention companies hiring frequently, using accurate and recent data where possible.",
+                                "You are a helpful and professional career advisor. Provide specific skill suggestions, trending job roles, and mention companies hiring frequently, using accurate and recent data where possible. Do not provide career-related information unless explicitly asked by the user.",
                         },
                         ...messages,
                         newUserMessage,
@@ -57,18 +57,15 @@ const ChatBot = () => {
                 }),
             });
 
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
             const reader = res.body?.getReader();
             const decoder = new TextDecoder();
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) {
-                    break;
-                }
+                if (done) break;
+
                 const chunk = decoder.decode(value);
                 const lines = chunk.split('\n').filter(line => line.startsWith('data:'));
 
@@ -78,23 +75,37 @@ const ChatBot = () => {
                         setIsTyping(false);
                         return;
                     }
+
                     try {
                         const json = JSON.parse(jsonString);
                         const content = json.choices?.[0]?.delta?.content;
+
                         if (content) {
-                            setStreamedReply((prev) => prev + content);
+                            setMessages((prevMessages) => {
+                                const updatedMessages = [...prevMessages];
+                                const lastIndex = updatedMessages.length - 1;
+                                if (updatedMessages[lastIndex].role === "assistant") {
+                                    updatedMessages[lastIndex].content += content;
+                                }
+                                return updatedMessages;
+                            });
                         }
                     } catch (error) {
                         console.error("Error parsing JSON:", error, jsonString);
                     }
                 }
             }
-            setIsTyping(false);
-            setMessages((prev) => [...prev, { role: "assistant", content: streamedReply }]);
 
+            setIsTyping(false);
         } catch (err) {
             console.error("API error:", err);
-            setMessages((prev) => [...prev, { role: "assistant", content: "Oops! An error occurred while fetching the response. Please try again later." }]);
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content: "Oops! An error occurred while fetching the response. Please try again later.",
+                },
+            ]);
             setIsTyping(false);
         }
     };
@@ -125,7 +136,7 @@ const ChatBot = () => {
                     >
                         <div className="bg-gradient-to-l from-blue-700 via-blue-600 to-indigo-700 text-white p-4 flex justify-between items-center rounded-t-lg shadow-md">
                             <div className="flex items-center space-x-2">
-                                <img src={botLogo} alt="Nekko AI" className="w-8 h-8 rounded-full" />
+                                <img src={botLogo} alt="Cae" className="w-8 h-8 rounded-full" />
                                 <span className="font-semibold text-lg">Career AI Assistant</span>
                             </div>
                             <button
@@ -145,11 +156,6 @@ const ChatBot = () => {
                                         <img src={msg.role === "user" ? userLogo : botLogo} alt={msg.role} className="w-8 h-8 rounded-full border border-gray-700" />
                                         <div className={`p-3 rounded-lg text-white text-sm whitespace-pre-wrap ${msg.role === "user" ? "bg-blue-600" : "bg-gray-700"}`}>
                                             {msg.content}
-                                            {msg.timestamp && (
-                                                <span className={`text-xs block text-right ${msg.role === "user" ? "text-gray-300" : "text-gray-400"}`}>
-                                                    {msg.timestamp}
-                                                </span>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -162,12 +168,6 @@ const ChatBot = () => {
                                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
                                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
                                     </div>
-                                </div>
-                            )}
-                            {streamedReply && !isTyping && (
-                                <div className="flex items-start space-x-2 text-white">
-                                    <img src={botLogo} alt="Bot Reply" className="w-8 h-8 rounded-full border border-gray-700" />
-                                    <div className="p-3 rounded-lg bg-gray-700 text-sm whitespace-pre-wrap">{streamedReply}</div>
                                 </div>
                             )}
                             <div ref={chatEndRef} />
