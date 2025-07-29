@@ -32,7 +32,6 @@ Return ONLY a JSON array in this format:
 `; // Also update prompt to reference 'role'
 
         const aiResponse = await askGemini(prompt);
-        console.log("Raw AI Response (MCQs):", aiResponse);
 
         const match = aiResponse.match(/\[\s*{[\s\S]*?}\s*\]/);
         if (!match) {
@@ -66,7 +65,6 @@ Return the tips ONLY in a clean JSON array like:
 `;
 
         const aiResponse = await askGemini(prompt);
-        console.log("Raw AI Response (Tips):", aiResponse);
 
         let parsedTips;
 
@@ -125,7 +123,6 @@ Return ONLY a JSON array in this format:
 `;
 
         const aiResponse = await askGemini(prompt);
-        console.log("Raw AI Response (Predicted Questions):", aiResponse);
 
         const match = aiResponse.match(/\[\s*{[\s\S]*?}\s*\]/);
         if (!match) {
