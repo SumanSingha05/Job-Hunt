@@ -39,8 +39,8 @@ app.use("/api/v1/interview", interviewRoutes);
 
 
 app.use(express.static(path.join(_dirname, "/frontend/dist")))
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(_dirname,))
+app.get('*', (_, res) => {
+    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"))
 })
 
 app.listen(PORT, () => {
