@@ -28,14 +28,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const PORT = process.env.port || 3000;
+const PORT = process.env.port || 8000;
 
 //api's
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
-app.use('/api/v1/interview', interviewRoutes);
+app.use("/api/v1/interview", interviewRoutes);
 
 
 app.use(express.static(path.join(_dirname, "/frontend/dist")))

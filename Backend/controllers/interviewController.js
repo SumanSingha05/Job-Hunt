@@ -1,16 +1,20 @@
-// controllers/interviewController.js
+import { askGemini } from "../utils/gemini.js";
 
-import { askOpenRouter } from "../utils/openRouter.js";
-
-// 1️⃣ Mock Interview MCQs
+// ✅ 1️⃣ Mock Interview MCQs
+// ✅ 1️⃣ Mock Interview MCQs
 export const getMockInterview = async (req, res) => {
     try {
-        const { jobDescription } = req.body;
+        // --- CHANGE START ---
+        const { role } = req.body; // Change to 'role'
+        if (!role || typeof role !== "string") { // Update validation
+            return res.status(400).json({ error: "Missing or invalid job role for mock interview." }); // Update error message
+        }
+        // --- CHANGE END ---
 
         const prompt = `
-You are an expert interviewer. Based on this job description:
+You are an expert interviewer. Based on this job description or role:
 
-${jobDescription}
+${role}
 
 Generate 3 MCQ-style interview questions. For each, give:
 - The question
@@ -25,9 +29,9 @@ Return ONLY a JSON array in this format:
         "correctAnswer": "B"
     }
 ]
-`;
+`; // Also update prompt to reference 'role'
 
-        const aiResponse = await askOpenRouter(prompt);
+        const aiResponse = await askGemini(prompt);
         console.log("Raw AI Response (MCQs):", aiResponse);
 
         const match = aiResponse.match(/\[\s*{[\s\S]*?}\s*\]/);
@@ -36,14 +40,18 @@ Return ONLY a JSON array in this format:
         }
 
         const parsed = JSON.parse(match[0]);
+        // Optional: Add some basic validation for parsed data
+        if (!Array.isArray(parsed) || parsed.some(q => !q.question || !Array.isArray(q.options) || !q.correctAnswer)) {
+            return res.status(500).json({ error: "AI response did not contain expected MCQ structure." });
+        }
+
         res.status(200).json({ mcqs: parsed });
     } catch (err) {
-        console.error("Error parsing AI output:", err.message);
+        console.error("Error generating mock interview questions:", err.message); // More specific error log
         res.status(500).json({ error: "Failed to generate mock interview questions." });
     }
 };
-
-// 2️⃣ Interview Tips
+// ✅ 2️⃣ Interview Tips
 export const getInterviewTips = async (req, res) => {
     try {
         const prompt = `
@@ -57,14 +65,22 @@ Return the tips ONLY in a clean JSON array like:
 ]
 `;
 
-        const aiResponse = await askOpenRouter(prompt);
-        const match = aiResponse.match(/\[\s*"(?:[^"]|\\")*"\s*(,\s*"(?:[^"]|\\")*"\s*)*\]/);
+        const aiResponse = await askGemini(prompt);
+        console.log("Raw AI Response (Tips):", aiResponse);
 
-        if (!match) {
-            return res.status(500).json({ error: "Could not extract valid JSON from AI response." });
+        let parsedTips;
+
+        try {
+            parsedTips = JSON.parse(aiResponse);
+        } catch (e) {
+            const match = aiResponse.match(/\[\s*"(?:[^"]|\\")*"\s*(,\s*"(?:[^"]|\\")*"\s*)*\]/);
+            if (match) {
+                parsedTips = JSON.parse(match[0]);
+            } else {
+                return res.status(500).json({ error: "Could not extract valid JSON from AI response." });
+            }
         }
 
-        const parsedTips = JSON.parse(match[0]);
         res.status(200).json({ tips: parsedTips });
     } catch (err) {
         console.error("Error getting interview tips:", err.message);
@@ -72,10 +88,14 @@ Return the tips ONLY in a clean JSON array like:
     }
 };
 
-// 3️⃣ Predictive Questions (Technical, Behavioral, Situational) WITH ANSWERS
+// ✅ 3️⃣ Predictive Questions with Answers
 export const getPredictedQuestionsWithAnswers = async (req, res) => {
     try {
         const { jobDescription } = req.body;
+
+        if (!jobDescription || typeof jobDescription !== "string") {
+            return res.status(400).json({ error: "Missing or invalid jobDescription" });
+        }
 
         const prompt = `
 You are an experienced recruiter and interview expert. Based on the following job description:
@@ -104,8 +124,8 @@ Return ONLY a JSON array in this format:
 ]
 `;
 
-        const aiResponse = await askOpenRouter(prompt);
-        console.log("Raw AI Response (Predicted Questions with Answers):", aiResponse);
+        const aiResponse = await askGemini(prompt);
+        console.log("Raw AI Response (Predicted Questions):", aiResponse);
 
         const match = aiResponse.match(/\[\s*{[\s\S]*?}\s*\]/);
         if (!match) {
