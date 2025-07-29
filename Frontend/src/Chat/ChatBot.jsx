@@ -4,6 +4,14 @@ import { Send } from "lucide-react";
 import botLogo from "../assets/bot.png";
 import userLogo from "../assets/userr.png";
 
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
@@ -25,6 +33,10 @@ const ChatBot = () => {
         scrollToBottom();
     }, [messages, isTyping]);
 
+    const removeMarkdownBold = (text) => {
+        return text.replace(/\*\*(.*?)\*\*|\*(.*?)\*/g, '$1$2');
+    };
+
     const sendMessage = async () => {
         if (!input.trim()) return;
 
@@ -36,74 +48,83 @@ const ChatBot = () => {
         setIsTyping(true);
 
         try {
-            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer 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`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    model: "openchat/openchat-7b",
-                    messages: [
-                        {
-                            role: "system",
-                            content:
-                                "You are a helpful and professional career advisor. Provide specific skill suggestions, trending job roles, and mention companies hiring frequently, using accurate and recent data where possible. Do not provide career-related information unless explicitly asked by the user.",
-                        },
-                        ...messages,
-                        newUserMessage,
-                    ],
-                    stream: true,
-                }),
+            const history = messages.map((msg) => ({
+                role: msg.role === "assistant" ? "model" : msg.role,
+                parts: [{ text: msg.content }],
+            }));
+
+            const result = await model.generateContentStream({
+                contents: [
+                    {
+                        role: "user",
+                        parts: [
+                            {
+                                text: `You are an AI-powered Career Guidance Counselor. Your primary goal is to provide accurate, current, and actionable advice on career development.
+
+When responding to user queries:
+
+1.  Be highly specific: Offer concrete examples, names of skills, tools, job titles, and companies.
+2.  Prioritize Current Data: Emphasize that your information is based on recent trends (e.g., "Based on Q2 2025 market analysis..." or "Current industry reports indicate..."). If you cannot provide current data for a specific query, state that you are providing general insights.
+3.  Actionable Insights: Frame advice in a way that empowers the user to take the next step.
+4.  Scope Adherence: Only provide career-related information. If a query is outside this scope, politely redirect the user back to career topics.
+5.  Maintain Professional Tone: Your responses should be clear, concise, encouraging, and respectful.
+6.  Key Information Areas to Cover (when relevant to user query):
+    * In-demand Skills: Mention specific technical skills (e.g., Python, SQL, AWS, React, Data Visualization tools like Tableau/Power BI) and soft skills (e.g., critical thinking, communication, problem-solving, adaptability).
+    * Trending Job Roles/Titles: List specific job titles currently experiencing high demand (e.g., AI Engineer, Data Scientist, Cybersecurity Analyst, Cloud Architect, UX Designer, Digital Marketing Specialist).
+    * Hiring Companies/Sectors: Identify companies known for frequent hiring in relevant fields, or sectors that are currently expanding rapidly.
+    * Educational/Certification Paths: Suggest relevant courses, certifications (e.g., PMP, AWS Certified Solutions Architect), or academic programs.
+    * Job Search Strategies: Offer advice on resume optimization, interview preparation, networking, and leveraging platforms like LinkedIn.
+
+Example scenarios to guide your responses:
+
+* User asks about "IT jobs": Break down into sub-domains (e.g., Software Development, Cybersecurity, Cloud Computing, Data Science) and provide specific examples for each.
+* User asks about "skills for the future": Focus on evergreen skills (adaptability, critical thinking) combined with emerging tech skills (AI/ML, blockchain, quantum computing fundamentals).
+* User asks a non-career question (e.g., "What's the weather like?"): Respond with: "As an AI Career Guidance Counselor, I focus solely on career-related queries. How can I assist you with your professional journey today?"
+
+Begin by offering a broad range of career topics you can cover to set expectations.`,
+                            },
+                        ],
+                    },
+                    ...history,
+                    {
+                        role: "user",
+                        parts: [{ text: newUserMessage.content }],
+                    },
+                ],
             });
 
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            let fullResponse = "";
+            for await (const chunk of result.stream) {
+                let chunkText = chunk.text();
+                chunkText = removeMarkdownBold(chunkText);
 
-            const reader = res.body?.getReader();
-            const decoder = new TextDecoder();
+                fullResponse += chunkText;
 
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value);
-                const lines = chunk.split('\n').filter(line => line.startsWith('data:'));
-
-                for (const line of lines) {
-                    const jsonString = line.substring(5).trim();
-                    if (jsonString === '[DONE]') {
-                        setIsTyping(false);
-                        return;
+                setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+                    const lastIndex = updatedMessages.length - 1;
+                    if (updatedMessages[lastIndex].role === "assistant") {
+                        updatedMessages[lastIndex].content = fullResponse;
                     }
-
-                    try {
-                        const json = JSON.parse(jsonString);
-                        const content = json.choices?.[0]?.delta?.content;
-
-                        if (content) {
-                            setMessages((prevMessages) => {
-                                const updatedMessages = [...prevMessages];
-                                const lastIndex = updatedMessages.length - 1;
-                                if (updatedMessages[lastIndex].role === "assistant") {
-                                    updatedMessages[lastIndex].content += content;
-                                }
-                                return updatedMessages;
-                            });
-                        }
-                    } catch (error) {
-                        console.error("Error parsing JSON:", error, jsonString);
-                    }
-                }
+                    return updatedMessages;
+                });
             }
-
             setIsTyping(false);
+
         } catch (err) {
             console.error("API error:", err);
+            let errorMessage = "Oops! An error occurred while fetching the response. Please try again later.";
+            if (err.message && err.message.includes("API key not valid")) {
+                errorMessage = "Authentication error: Your Gemini API key might be invalid or expired. Please check your .env file.";
+            } else if (err.message && err.message.includes("429")) {
+                errorMessage = "Too many requests. Please wait a moment before trying again.";
+            }
+
             setMessages((prev) => [
                 ...prev,
                 {
                     role: "assistant",
-                    content: "Oops! An error occurred while fetching the response. Please try again later.",
+                    content: errorMessage,
                 },
             ]);
             setIsTyping(false);
