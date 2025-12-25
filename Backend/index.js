@@ -22,13 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: true,
     credentials: true
 }
 
 app.use(cors(corsOptions));
 
-const PORT = process.env.port || 8000;
+const PORT = process.env.PORT || 8000;
 
 //api's
 app.use("/api/v1/user", userRoute);
@@ -38,9 +38,9 @@ app.use("/api/v1/application", applicationRoute);
 app.use("/api/v1/interview", interviewRoutes);
 
 
-app.use(express.static(path.join(_dirname, "/Frontend/dist")))
+app.use(express.static(path.join(_dirname, "/frontend/dist")))
 app.get('*', (_, res) => {
-    res.sendFile(path.resolve(_dirname, "Frontend", "dist", "index.html"))
+    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"))
 })
 
 app.listen(PORT, () => {

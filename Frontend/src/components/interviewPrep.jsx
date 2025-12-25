@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { INTERVIEW_API_END_POINT } from '../utils/constant';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,7 +32,7 @@ const InterviewPrep = () => {
         setLoading((prev) => ({ ...prev, predictQuestions: true }));
         setError('');
         try {
-            const res = await fetch('http://localhost:8000/api/v1/interview/questions-with-answers', {
+            const res = await fetch(`${INTERVIEW_API_END_POINT}/questions-with-answers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ jobDescription: jobDesc }),
@@ -50,7 +51,7 @@ const InterviewPrep = () => {
         setLoading((prev) => ({ ...prev, mockInterview: true }));
         setError('');
         try {
-            const res = await fetch('http://localhost:8000/api/v1/interview/mock', {
+            const res = await fetch(`${INTERVIEW_API_END_POINT}/mock`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ role }),
@@ -69,7 +70,7 @@ const InterviewPrep = () => {
         setLoading((prev) => ({ ...prev, fetchTips: true }));
         setError('');
         try {
-            const res = await fetch('http://localhost:8000/api/v1/interview/tips');
+            const res = await fetch(`${INTERVIEW_API_END_POINT}/tips`);
             const data = await res.json();
             setTips(data.tips);
         } catch (err) {
